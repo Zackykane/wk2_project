@@ -1,73 +1,70 @@
-# Your parking garage class should have the following methods:
-# - takeTicket
-# - This should decrease the amount of tickets available by 1
-# - This should decrease the amount of parkingSpaces available by 1
-# - payForParking
-# - Display an input that waits for an amount from the user and store it in a variable
-# - If the payment variable is not empty then (meaning the ticket has been paid) -> 
-#   display a message to the user that their ticket has been paid and they have 15mins to leave
-# - This should update the "currentTicket" dictionary key "paid" to True
-# -leaveGarage
-# - If the ticket has been paid, display a message of "Thank You, have a nice day"
-# - If the ticket has not been paid, display an input prompt for payment
-# - Once paid, display message "Thank you, have a nice day!"
-# - Update parkingSpaces list to increase by 1 (meaning add to the parkingSpaces list)
-# - Update tickets list to increase by 1 (meaning add to the tickets list)
+class ParkingGarage:
+    def __init__(self, total_tickets, total_parking_spaces):
+        self.tickets = list(range(1, total_tickets + 1))
+        self.parkingSpaces = list(range(1, total_parking_spaces + 1))
+        self.currentTicket = {}
 
-# You will need a few attributes as well:
-# - tickets -> list
-# - parkingSpaces -> list
-# - currentTicket -> dictionary
-
-# NOTE: Use VSCode for this project starting with the following files below. 
-# Also, each person in the group should list the portion of the project they 
-# were responsible for inside of the python file and inside the README file.
-
-# By the end of this project each group/student should be able to:
-# - Explain and/or demostrate using Git and Github for collaboration
-# - Explain and/or demostrate creating classes
-# - Explain and/or demostrate creating class methods
-# - Explain and/or demostrate class instantiation
-
-
-# When the project is completed, commit the final changes, sync all pull requests, 
-# and each member should submit their respective GitHub links(though the code in each should be the same)
-
-class ParkingGarage():
-    def __init__(self, spaces, tickets):
-        self.spaces = [10]
-        self.tickets = [10]
-        self.current_tickets = {}
-        
-    
-    
-    def take_ticket(self):
-        if self.tickets and self.spaces:
+    def takeTicket(self):
+        if self.tickets and self.parkingSpaces:
             ticket_number = self.tickets.pop(0)
-            space_number = self.spaces.pop(0)    
-            self.current_tickets = ticket_number + space_number           
-            print(f'Ticket {ticket_number} issued. Your parking spot is number {space_number}') 
-            
-    def ticket_cal(self):       
-    
-    
-    def check_spaces(self): #Temp
-        print(f'There are {self.spaces} spaces and {self.tickets} tickets avalible')
+            parking_space = self.parkingSpaces.pop(0)
+            self.currentTicket = {
+                                    "ticket_number": ticket_number, 
+                                    "parking_space": parking_space, 
+                                    "paid": False
+                                    }
+            print(f"Your ticket number is {ticket_number}. Please park in space #{parking_space}.")
 
-while True: 
-    main_screen = input("Type 'p' to take ticket or Type 'e' to exit & pay: ")
-    if main_screen == 'p':
-        ParkingGarage.take_ticket()
-    elif main_screen == 'e':
-        pass
+    def payForParking(self):
+        if "ticket_number" in self.currentTicket:
+            payment = input("Enter the payment amount: ")
+            if payment:
+                print("Ticket has been paid. You have 15 minutes to leave.")
+                self.currentTicket["paid"] = True
+            else:
+                print("Payment not received.")
+
+    def checkAvailability(self):
+        print(f"Available parking spaces: {len(self.parkingSpaces)}")
+
+    def leaveGarage(self):
+        if "ticket_number" in self.currentTicket:
+            if self.currentTicket["paid"]:
+                print("Thank you, have a nice day!")
+            else:
+                payment = input("Please pay for your ticket: ")
+                if payment:
+                    print("Thank you, have a nice day!")
+                    self.currentTicket["paid"] = True
+                    self.parkingSpaces.append(self.currentTicket["parking_space"])
+                    self.tickets.append(self.currentTicket["ticket_number"])
+                else:
+                    print("Payment not received. You must pay before leaving.")
+# Our Example Input 
+total_tickets = 10
+total_parking_spaces = 10
+
+garage = ParkingGarage(total_tickets, total_parking_spaces)
+
+while True:
+    print("Options:")
+    print("1. Take Ticket")
+    print("2. Pay for Parking")
+    print("3. Check Availability")
+    print("4. Leave Garage")
+    print("5. Exit")
+
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        garage.takeTicket()
+    elif choice == "2":
+        garage.payForParking()
+    elif choice == "3":
+        garage.checkAvailability()
+    elif choice == "4":
+        garage.leaveGarage()
+    elif choice == "5":
+        break
     else:
-        print("Enter valid input")
-        
-        
-
-
-
-        
-        
-        
-
+        print("Invalid choice. Please choose a valid option.")
